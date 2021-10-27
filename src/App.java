@@ -43,8 +43,32 @@ public class App {
         input.close();
     }
 
-    private static void InsertarValores() {        
-        String InsertarValores = "INSERT INTO `bd_2_saavedra_j`.`categoria`(`Descripcion`,`SalarioBase`)VALUES('Vendedor',1000);        INSERT INTO `bd_2_saavedra_j`.`categoria`(`Descripcion`,`SalarioBase`)VALUES('Reponedor',900);        INSERT INTO `bd_2_saavedra_j`.`categoria`(`Descripcion`,`SalarioBase`)VALUES('Encargado',1500);        INSERT INTO `bd_2_saavedra_j`.`categoria`(`Descripcion`,`SalarioBase`)VALUES('Limpiador',1000);        INSERT INTO `bd_2_saavedra_j`.`categoria`(`Descripcion`,`SalarioBase`)VALUES('Gerente',2000);";
+    private static void InsertarValores() {    
+        Conector conectar = new Conector();
+        Connection conexion = conectar.getConexion();
+
+        String InsertarValores1 = "INSERT INTO bd_2_saavedra_j.categoria(Descripcion,SalarioBase)VALUES('Vendedor',1000);" ;
+        String InsertarValores2 = "INSERT INTO bd_2_saavedra_j.categoria(Descripcion,SalarioBase)VALUES('Reponedor',900); " ;
+        String InsertarValores3 = "INSERT INTO bd_2_saavedra_j.categoria(Descripcion,SalarioBase)VALUES('Encargado',1500); " ;
+        String InsertarValores4 = "INSERT INTO bd_2_saavedra_j.categoria(Descripcion,SalarioBase)VALUES('Limpiador',1000);  ";
+        String InsertarValores5 = "INSERT INTO bd_2_saavedra_j.categoria(Descripcion,SalarioBase)VALUES('Gerente',2000);";
+        PreparedStatement s;
+        try {
+            s = conexion.prepareStatement(InsertarValores1);
+            s.executeUpdate(); 
+            s = conexion.prepareStatement(InsertarValores2);
+            s.executeUpdate();
+            s = conexion.prepareStatement(InsertarValores3);
+            s.executeUpdate();
+            s = conexion.prepareStatement(InsertarValores4);
+            s.executeUpdate();
+            s = conexion.prepareStatement(InsertarValores5);
+            s.executeUpdate();
+            conexion.close();                       
+        }    catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Menu();
     }
 
     private static void CrearTabla() {       
@@ -64,10 +88,13 @@ public class App {
             s = conexion.prepareStatement(crarCodCategoria);
             s.executeUpdate();
             s = conexion.prepareStatement(CrearFK);
-            s.executeUpdate();              
+            s.executeUpdate();      
+            conexion.close();        
         }    catch (SQLException e) {
             e.printStackTrace();
-        }
+        }        
+        
+        
         Menu();
     }
 

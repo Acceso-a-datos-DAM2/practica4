@@ -36,6 +36,19 @@ public class Conector {
     }
     return c;
   }
+  public void closeConnection(){
+    Connection c = null;
+  try{
+    c.close();
+    System.out.println("Conexión cerrada.");        
+  } catch (SQLException e) {
+    System.out.println("SQL mensaje: " + e.getMessage());
+    System.out.println("SQL Estado: " + e.getSQLState());
+    System.out.println("SQL código específico: " + e.getErrorCode());
+  } catch (Exception e) {
+    e.printStackTrace(System.err);
+  }
+}
 }
 
 
