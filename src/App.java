@@ -17,7 +17,7 @@ public class App {
     private static void Menu() {
 
         // Mostramos las opciones de ejercicos que podemos hacer
-        System.out.println("MENU:" + "\n" + "1 Crear Tabla" + "\n" + "2 Insetar Valores" +"\n" + "3 Asignar cstegoria"+"\n" + "4 Subir Salario" + "\n" + "0 SALIR");
+        System.out.println("MENU:" + "\n" + "1 Crear Tabla" + "\n" + "2 Insetar Valores" +"\n" + "3 Asignar cstegoria"+"\n" + "4 Subir Salario" + "\n" + "5 Listar" + "\n" + "0 SALIR");
         System.out.println("¿Que deseas hacer?");
         // hacemos un scanner para leer de consola la accion a realizar por el menu
         Scanner input = new Scanner(System.in);
@@ -36,6 +36,9 @@ public class App {
             case 4:
                 SubirSalario();
                 break;
+            case 5:
+                Listar();
+                break;
             case 0:
                 System.exit(0);
                 break;
@@ -45,6 +48,23 @@ public class App {
         }
         
         input.close();
+    }
+
+    private static void Listar() {
+        Conector conectar = new Conector();
+        Connection conexion = conectar.getConexion();
+
+        String Listar = "SELECT Codigo,Nombre,Telefono,DNI,(select Descripcion from categoria where Categoria=Cod_Categoria)  as 'Categoria',(select SalarioBase from categoria where Categoria=Cod_Categoria)  as 'Salario'FROM empleados;";
+        PreparedStatement si;
+        try {
+            si = conexion.prepareStatement(Listar);
+            ResultSet rs = si.executeQuery (); 
+            while (rs.next()) {
+                System.out.println(rs.getInt(1)+ " " +rs.getString(2)+ " " +rs.getString(3)+ " " +rs.getString(4)+ " " +rs.getString(5)+ " " +rs.getInt(6));
+            }                     
+        }    catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void SubirSalario() {
@@ -76,7 +96,7 @@ public class App {
         Conector conectar = new Conector();
         Connection conexion = conectar.getConexion();
 
-        int[] Categoria=new int[5];
+        int[] Categoria=new int[6];
 
         System.out.println("Estas son las distintas categorias: ");
         
@@ -92,6 +112,8 @@ public class App {
         Categoria[3] = input.nextInt();
         System.out.println("Dime el id de la categoria para el quinto empleado: ");
         Categoria[4] = input.nextInt();
+        System.out.println("Dime el id de la categoria para el sexto empleado: ");
+        Categoria[5] = input.nextInt();
 
         for (int i = 0; i < Categoria.length; i++) {
             String ObtenerCategorias = "UPDATE empleados set Categoria = "+Categoria[i]+ " WHERE Codigo = "+(i+1);
@@ -105,7 +127,7 @@ public class App {
                 e.printStackTrace();
             }
         }
-        
+
         try {
             conexion.close();
         } catch (SQLException e) {
