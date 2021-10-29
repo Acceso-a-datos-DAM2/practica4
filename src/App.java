@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
@@ -56,15 +57,36 @@ public class App {
 
         String Listar = "SELECT Codigo,Nombre,Telefono,DNI,(select Descripcion from categoria where Categoria=Cod_Categoria)  as 'Categoria',(select SalarioBase from categoria where Categoria=Cod_Categoria)  as 'Salario'FROM empleados;";
         PreparedStatement si;
+        String ubicacion="SELECT Responsable from ubicacion";
+        PreparedStatement sis;
+        ArrayList<Integer> idResponsable = new ArrayList<Integer>();
         try {
             si = conexion.prepareStatement(Listar);
+            sis = conexion.prepareStatement(ubicacion);
             ResultSet rs = si.executeQuery (); 
+            ResultSet res = sis.executeQuery ();
+            while (res.next()) {
+                idResponsable.add(res.getInt(1));                
+            }
             while (rs.next()) {
                 System.out.println(rs.getInt(1)+ " " +rs.getString(2)+ " " +rs.getString(3)+ " " +rs.getString(4)+ " " +rs.getString(5)+ " " +rs.getInt(6));
-            }                     
+                ComprobarSiOkay(idResponsable,rs.getInt(1),rs.getString(5));     
+            }  
+            
         }    catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void ComprobarSiOkay(ArrayList<Integer> responsables, int codigoEmpleado, String categoria) {
+        for (int responsable : responsables) {
+            if(responsable==codigoEmpleado){
+                if(!categoria.equals("Encargado")){
+                    System.out.println("Este empleado deberia ser Responsable y no "+categoria+" porque es responsable de una ubicacion");
+                }
+            }
+        }
+        
     }
 
     private static void SubirSalario() {
@@ -134,7 +156,7 @@ public class App {
             e.printStackTrace();
         }
         input.close();
-
+        Menu();
     }
 
     private static void MostrarCategoria(Connection conexion) {
