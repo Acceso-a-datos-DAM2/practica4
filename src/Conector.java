@@ -26,7 +26,7 @@ public class Conector {
       Connection c = null;
     try{
       c = DriverManager.getConnection(urlConnection, user, pwd);
-      System.out.println("Conexión realizada.");        
+      System.out.println("Conexion abierta.");        
     } catch (SQLException e) {
       System.out.println("SQL mensaje: " + e.getMessage());
       System.out.println("SQL Estado: " + e.getSQLState());
